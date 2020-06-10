@@ -6,7 +6,7 @@ function App() {
   const [date, setDate] = useState(null);
   useEffect(() => {
     async function getDate() {
-      const res = await fetch('/api/date');
+      const res = await fetch('https://deck-builder-api.lensesrequired.now.sh/time');
       const newDate = await res.text();
       setDate(newDate);
     }
