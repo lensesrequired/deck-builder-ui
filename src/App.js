@@ -1,18 +1,17 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import axios from 'axios'
 import './App.css';
 
 function App() {
   const [date, setDate] = useState(null);
   useEffect(() => {
-    async function getDate() {
-      const res = await fetch('/api');
+    axios.get('/api').then(async res => {
       console.log(res)
-      console.log(await res.json())
-      const newDate = await res.json();
-      setDate(newDate);
-    }
-    getDate();
+      const {data} = res
+      console.log(data)
+      setDate(data)
+    })
   }, []);
   return (
     <main>
