@@ -10,7 +10,7 @@ function App() {
       console.log(res)
       const {data} = res
       console.log(data)
-      setDate(data)
+      setDate(data.time)
     })
   }, []);
   return (
