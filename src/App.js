@@ -10,6 +10,15 @@ function App() {
       const { data } = res;
       setDate(data.time);
     });
+    axios.get('/photo').then(function(response) {
+      let responseBlob = new Blob([response.data], { type: 'image/png' });
+      let reader = new window.FileReader();
+      reader.readAsDataURL(responseBlob);
+      reader.onload = function() {
+        let imageDataUrl = reader.result;
+        console.log(imageDataUrl);
+      };
+    });
   }, []);
   return (
     <main>
