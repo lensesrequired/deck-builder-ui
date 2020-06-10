@@ -1,23 +1,21 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import './App.css';
 
 function App() {
   const [date, setDate] = useState(null);
   useEffect(() => {
-    axios.get('/api').then(async res => {
-      console.log(res)
-      const {data} = res
-      console.log(data)
-      setDate(data.time)
-    })
+    axios.get('/time').then(async res => {
+      const { data } = res;
+      setDate(data.time);
+    });
   }, []);
   return (
     <main>
       <h1>Create React App + Go API</h1>
       <h2>
-        Deployed with{' '}
+        Deployed with{ ' ' }
         <a
           href="https://vercel.com/docs"
           target="_blank"
@@ -34,23 +32,23 @@ function App() {
           rel="noreferrer noopener"
         >
           This project
-        </a>{' '}
-        was bootstrapped with{' '}
+        </a>{ ' ' }
+        was bootstrapped with{ ' ' }
         <a href="https://facebook.github.io/create-react-app/">
           Create React App
-        </a>{' '}
-        and contains three directories, <code>/public</code> for static assets,{' '}
-        <code>/src</code> for components and content, and <code>/api</code>{' '}
-        which contains a serverless <a href="https://golang.org/">Go</a>{' '}
-        function. See{' '}
+        </a>{ ' ' }
+        and contains three directories, <code>/public</code> for static assets,{ ' ' }
+        <code>/src</code> for components and content, and <code>/api</code>{ ' ' }
+        which contains a serverless <a href="https://golang.org/">Go</a>{ ' ' }
+        function. See{ ' ' }
         <a href="/api/date">
           <code>api/date</code> for the Date API with Go
         </a>
         .
       </p>
-      <br />
+      <br/>
       <h2>The date according to Go is:</h2>
-      <p>{date ? date : 'Loading date...'}</p>
+      <p>{ date ? date : 'Loading date...' }</p>
     </main>
   );
 }
