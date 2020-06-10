@@ -8,6 +8,7 @@ function App() {
   useEffect(() => {
     axios.get('/time').then(async res => {
       const { data } = res;
+      console.log(res);
       setDate(data.time);
     });
     axios.get('/photo').then(function(response) {
