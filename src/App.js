@@ -6,7 +6,8 @@ import './App.css';
 function App() {
   const [date, setDate] = useState(null);
   useEffect(() => {
-    axios.get('/time').then(async res => {
+    axios.get('/api').then(async res => {
+      console.log(res);
       const { data } = res;
       console.log(res);
       setDate(data.time);
