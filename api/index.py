@@ -1,5 +1,5 @@
 from flask import Flask, Response
-import time from time
+import time
 app = Flask(__name__)
 
 @app.route('/', defaults={'path': ''})
