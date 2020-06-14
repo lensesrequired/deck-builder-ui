@@ -6,6 +6,7 @@ main {
     hyphens: auto;
     line-height: 1.65;
     min-height: 100vh;
+    max-width: 100vw;
     padding: 20px 0;
     text-align: center;
 }
@@ -46,4 +47,8 @@ pre {
 code:before,
 code:after {
     content: '\`';
+}
+
+button {
+    width: auto
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import 'semantic-ui-css/semantic.min.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -7,6 +8,216 @@ class App extends React.Component {
 
     this.state = {
       cards: [
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
+        {
+          metadata: {
+            'art': 'characters/03.png',
+            'name': 'Blind Dude',
+            'actions': {
+              'additions': [
+                {
+                  'type': 'Draw',
+                  'qty': 1
+                }
+              ],
+              'discardQty': 1,
+              'discardRequired': true,
+              'destroyQty': 0,
+              'destroyRequired': true,
+              'buyingPower': 2
+            },
+            'costBuy': 3,
+            'victoryPoints': 1
+          }
+        },
         {
           metadata: {
             'art': 'characters/03.png',
@@ -92,12 +303,18 @@ class App extends React.Component {
         <button>Upload</button>
         <button>Add a Card</button>
         <button>Export Template</button>
-        <p>{ this.state.images.length ? 'Cards' : 'Loading image...' }</p>
-        <div style={ { display: 'flex' } }>
+        <div style={ {
+          display: 'flex',
+          width: '100vw',
+          height: '70vh',
+          backgroundColor: 'lightgray',
+          overflowY: 'scroll',
+          flexWrap: 'wrap'
+        } }>
           { this.state.images.map(
             (image) => (
               <div style={ { padding: '10px', display: 'flex', flexDirection: 'column' } }>
-                <img alt={ 'card' } style={ { height: '300px', marginBottom: '10px' } } src={ image }/>
+                <img alt={ 'card' } style={ { height: '400px', marginBottom: '10px' } } src={ image }/>
                 <input type={ 'number' } placeholder={ 'Qty' } min={ 1 }/>
                 <button>Remove</button>
               </div>
