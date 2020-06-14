@@ -95,7 +95,14 @@ class App extends React.Component {
         <p>{ this.state.images.length ? 'Cards' : 'Loading image...' }</p>
         <div style={ { display: 'flex' } }>
           { this.state.images.map(
-            (image) => (<div style={ { padding: '10px' } }><img style={ { height: '500px' } } src={ image }/></div>)) }
+            (image) => (
+              <div style={ { padding: '10px', display: 'flex', flexDirection: 'column' } }>
+                <img alt={ 'card' } style={ { height: '300px', marginBottom: '10px' } } src={ image }/>
+                <input type={ 'number' } placeholder={ 'Qty' } min={ 1 }/>
+                <button>Remove</button>
+              </div>
+            )
+          ) }
         </div>
         <button>Export Cards as PDF</button>
         <button>Export Cards as JSON</button>
