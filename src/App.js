@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import 'semantic-ui-css/semantic.min.css';
+import { Input, Button } from 'semantic-ui-react';
 
 class App extends React.Component {
   constructor(props) {
@@ -260,36 +261,55 @@ class App extends React.Component {
             'victoryPoints': 1
           }
         }
-      ],
-      images: []
+      ]
     };
   }
 
   getCard = (metadata, callback) => {
-    return fetch('https://deck-builder-api.herokuapp.com/card', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(metadata)
-    }).then(async (response) => {
-      let reader = new FileReader();
-      reader.readAsDataURL(await response.blob());
-      reader.onloadend = function() {
-        let base64data = reader.result;
-        callback(base64data);
-      };
-    });
+    return new Promise((resolve => {
+      fetch('https://deck-builder-api.herokuapp.com/card', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(metadata)
+      }).then(async (response) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(await response.blob());
+        reader.onloadend = function() {
+          let base64data = reader.result;
+          resolve(callback(base64data));
+        };
+      });
+    }));
+
   };
 
   getCards = async () => {
-    const { cards } = this.state;
-    const images = [];
-    this.setState({ images });
-    await Promise.all(cards.map(async (card) => {
-      await this.getCard(card.metadata, (data) => {
-        images.push(data);
-        this.setState({ images });
+    let { cards } = this.state;
+    cards = await Promise.all(cards.map(async (card, index) => {
+      return new Promise(async resolve => {
+        if (!card.image) {
+          await this.getCard(card.metadata, (data) => {
+            card.image = data;
+          });
+        }
+        return resolve(card);
       });
     }));
+    this.setState({ cards });
+  };
+
+  updateQty = (index, value) => {
+    const { cards } = this.state;
+    const card = cards[index];
+    card.qty = value;
+    cards.splice(index, 1, card);
+    this.setState({ cards });
+  };
+
+  removeCard = (index) => {
+    const { cards } = this.state;
+    cards.splice(index, 1);
+    this.setState({ cards });
   };
 
   componentDidMount(prevProps, prevState, snapshot) {
@@ -300,30 +320,34 @@ class App extends React.Component {
     return (
       <main>
         <h1>Build a Deck</h1>
-        <button>Upload</button>
-        <button>Add a Card</button>
-        <button>Export Template</button>
+        <Button>Upload</Button>
+        <Button>Add a Card</Button>
+        <Button>Export Template</Button>
         <div style={ {
           display: 'flex',
           width: '100vw',
-          height: '70vh',
+          height: '80vh',
+          margin: '5px',
           backgroundColor: 'lightgray',
           overflowY: 'scroll',
           flexWrap: 'wrap'
         } }>
-          { this.state.images.map(
-            (image) => (
+          { this.state.cards.map(
+            (card, index) => (
               <div style={ { padding: '10px', display: 'flex', flexDirection: 'column' } }>
-                <img alt={ 'card' } style={ { height: '400px', marginBottom: '10px' } } src={ image }/>
-                <input type={ 'number' } placeholder={ 'Qty' } min={ 1 }/>
-                <button>Remove</button>
+                { card.image ?
+                  <img alt={ 'card' } style={ { height: '400px', marginBottom: '10px' } } src={ card.image }/> :
+                  'Loading...' }
+                <Input label={ 'Qty' } style={ { marginBottom: '3px' } } type={ 'number' } min={ 1 }
+                       value={ card.qty || '1' } onChange={ (_, { value }) => this.updateQty(index, value) }/>
+                <Button onClick={ () => this.removeCard(index) }>Remove</Button>
               </div>
             )
           ) }
         </div>
-        <button>Export Cards as PDF</button>
-        <button>Export Cards as JSON</button>
-        <button>Play Game!</button>
+        <Button>Export Cards as PDF</Button>
+        <Button>Export Cards as JSON</Button>
+        <Button>Play Game!</Button>
       </main>
     );
   }
