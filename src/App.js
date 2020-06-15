@@ -8,260 +8,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      cards: [
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        },
-        {
-          metadata: {
-            'art': 'characters/03.png',
-            'name': 'Blind Dude',
-            'actions': {
-              'additions': [
-                {
-                  'type': 'Draw',
-                  'qty': 1
-                }
-              ],
-              'discardQty': 1,
-              'discardRequired': true,
-              'destroyQty': 0,
-              'destroyRequired': true,
-              'buyingPower': 2
-            },
-            'costBuy': 3,
-            'victoryPoints': 1
-          }
-        }
-      ]
+      cards: []
     };
     this.fileInputRef = React.createRef();
   }
@@ -281,7 +28,6 @@ class App extends React.Component {
         };
       });
     }));
-
   };
 
   getCards = async () => {
@@ -314,14 +60,34 @@ class App extends React.Component {
   };
 
   fileChange = ({ target }) => {
-    console.log(target.files[0]);
-    const formData = new FormData();
-    formData.append('file', target.files[0]);
-    alert('TODO: Implement file parsing');
+    const cards = JSON.parse(JSON.stringify(this.state.cards));
+    let reader = new FileReader();
+    const setCards = (c) => {
+      this.setState({ cards: c });
+    };
+    reader.onload = function onReaderLoad(event) {
+      let obj = JSON.parse(event.target.result);
+      if (Array.isArray(obj)) {
+        obj.forEach((card) => {
+          // TODO: validate card
+          cards.push({ metadata: card });
+        });
+        setCards(cards);
+      } else {
+        // TODO: Show error
+      }
+    };
+    reader.readAsText(target.files[0]);
   };
 
   componentDidMount(prevProps, prevState, snapshot) {
     this.getCards();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (JSON.stringify(prevState.cards) !== JSON.stringify(this.state.cards)) {
+      this.getCards();
+    }
   }
 
   render() {
@@ -336,9 +102,8 @@ class App extends React.Component {
         <Button onClick={ () => {
           alert('TODO');
         } }>Add a Card</Button>
-        <Button onClick={ () => {
-          alert('TODO');
-        } }>Export Template</Button>
+        <Button><a href={ `${ process.env.PUBLIC_URL }/deck_template.json` } download={ `deck_template.json` }>
+          Download Template</a></Button>
         <div style={ {
           display: 'flex',
           width: '100vw',

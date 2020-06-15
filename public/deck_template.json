@@ -1,0 +1,21 @@
+[
+  {
+    "art": "characters/03.png",
+    "name": "Blind Dude",
+    "actions": {
+      "additions": [
+        {
+          "type": "Draw",
+          "qty": 1
+        }
+      ],
+      "discardQty": 1,
+      "discardRequired": true,
+      "destroyQty": 0,
+      "destroyRequired": true,
+      "buyingPower": 2
+    },
+    "costBuy": 3,
+    "victoryPoints": 1
+  }
+]
