@@ -263,6 +263,7 @@ class App extends React.Component {
         }
       ]
     };
+    this.fileInputRef = React.createRef();
   }
 
   getCard = (metadata, callback) => {
@@ -312,6 +313,13 @@ class App extends React.Component {
     this.setState({ cards });
   };
 
+  fileChange = ({ target }) => {
+    console.log(target.files[0]);
+    const formData = new FormData();
+    formData.append('file', target.files[0]);
+    alert('TODO: Implement file parsing');
+  };
+
   componentDidMount(prevProps, prevState, snapshot) {
     this.getCards();
   }
@@ -320,9 +328,17 @@ class App extends React.Component {
     return (
       <main>
         <h1>Build a Deck</h1>
-        <Button>Upload</Button>
-        <Button>Add a Card</Button>
-        <Button>Export Template</Button>
+        <Button content={ 'Upload Cards' } onClick={ () => this.fileInputRef.current.click() }/>
+        <input
+          ref={ this.fileInputRef }
+          type="file" hidden
+          onChange={ this.fileChange }/>
+        <Button onClick={ () => {
+          alert('TODO');
+        } }>Add a Card</Button>
+        <Button onClick={ () => {
+          alert('TODO');
+        } }>Export Template</Button>
         <div style={ {
           display: 'flex',
           width: '100vw',
@@ -345,9 +361,15 @@ class App extends React.Component {
             )
           ) }
         </div>
-        <Button>Export Cards as PDF</Button>
-        <Button>Export Cards as JSON</Button>
-        <Button>Play Game!</Button>
+        <Button onClick={ () => {
+          alert('TODO');
+        } }>Export Cards as PDF</Button>
+        <Button onClick={ () => {
+          alert('TODO');
+        } }>Export Cards as JSON</Button>
+        <Button onClick={ () => {
+          alert('TODO');
+        } }>Play Game!</Button>
       </main>
     );
   }
