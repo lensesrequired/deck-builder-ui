@@ -25,17 +25,35 @@ class App extends React.Component {
       });
   };
 
-  updateCards = async (cards) => {
+  updateCards = async (cards, reload = true) => {
     fetch('https://deck-builder-api.herokuapp.com/cards/5ee8173ff5e32e48a1e6b1e4', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(cards.map((c) => {
+      body: JSON.stringify(JSON.parse(JSON.stringify(cards)).map((c) => {
         delete c.image;
         return c;
       }))
     }).then(() => {
-      this.getCards();
+      if (reload) {
+        this.getCards();
+      } else {
+        this.setState({ cards });
+      }
     });
+  };
+
+  downloadCards = () => {
+    const { cards } = JSON.parse(JSON.stringify(this.state));
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(
+      JSON.stringify(cards.map((c) => {
+        delete c.image;
+        return c;
+      }))
+    );
+    const dlAnchorElem = document.createElement('a');
+    dlAnchorElem.setAttribute('href', dataStr);
+    dlAnchorElem.setAttribute('download', 'deck.json');
+    dlAnchorElem.click();
   };
 
   updateQty = (index, value) => {
@@ -43,7 +61,7 @@ class App extends React.Component {
     const card = cards[index];
     card.qty = value;
     cards.splice(index, 1, card);
-    this.setState({ cards });
+    this.updateCards(cards, false);
   };
 
   removeCard = (index) => {
@@ -55,9 +73,7 @@ class App extends React.Component {
   fileChange = ({ target }) => {
     const { cards } = this.state;
     let reader = new FileReader();
-    const setCards = (c) => {
-      this.updateCards(c);
-    };
+    const setCards = (c) => this.updateCards(c);
     reader.onload = function onReaderLoad(event) {
       let obj = JSON.parse(event.target.result);
       if (Array.isArray(obj)) {
@@ -85,8 +101,11 @@ class App extends React.Component {
         <Button onClick={ () => {
           alert('TODO');
         } }>Add a Card</Button>
-        <Button><a href={ `${ process.env.PUBLIC_URL }/deck_template.json` } download={ `deck_template.json` }>
-          Download Template</a></Button>
+        <Button>
+          <a href={ `${ process.env.PUBLIC_URL }/deck_template.json` } download={ `deck_template.json` }>
+            Download Template
+          </a>
+        </Button>
         <div style={ {
           display: 'flex', width: '100vw', height: '80vh',
           overflowY: 'scroll', flexWrap: 'wrap', margin: '5px',
@@ -109,9 +128,7 @@ class App extends React.Component {
         <Button onClick={ () => {
           alert('TODO');
         } }>Export Cards as PDF</Button>
-        <Button onClick={ () => {
-          alert('TODO');
-        } }>Export Cards as JSON</Button>
+        <Button onClick={ this.downloadCards }>Export Cards as JSON</Button>
         <Button onClick={ () => {
           alert('TODO');
         } }>Play Game!</Button>

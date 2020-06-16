@@ -1,5 +1,6 @@
 [
   {
+    "qty": 3,
     "art": "characters/03.png",
     "name": "Blind Dude",
     "actions": {
