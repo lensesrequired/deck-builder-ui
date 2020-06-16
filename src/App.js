@@ -9,6 +9,7 @@ class App extends React.Component {
 
     this.state = {
       isLoading: false,
+      deckId: '5ee8173ff5e32e48a1e6b1e4',
       cards: []
     };
     this.fileInputRef = React.createRef();
@@ -26,7 +27,7 @@ class App extends React.Component {
   };
 
   updateCards = async (cards, reload = true) => {
-    fetch('https://deck-builder-api.herokuapp.com/cards/5ee8173ff5e32e48a1e6b1e4', {
+    fetch('https://deck-builder-api.herokuapp.com/cards/' + this.state.deckId, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(JSON.parse(JSON.stringify(cards)).map((c) => {
@@ -54,6 +55,25 @@ class App extends React.Component {
     dlAnchorElem.setAttribute('href', dataStr);
     dlAnchorElem.setAttribute('download', 'deck.json');
     dlAnchorElem.click();
+  };
+
+  exportPDF = () => {
+    fetch(`https://deck-builder-api.herokuapp.com/deck/${ this.state.deckId }/pdf`)
+      .then(async (response) => {
+        const downloadPDF = (data) => {
+          const dlAnchorElem = document.createElement('a');
+          dlAnchorElem.setAttribute('href', `${ data }`);
+          dlAnchorElem.setAttribute('download', 'deck.pdf');
+          dlAnchorElem.click();
+        };
+
+        let reader = new FileReader();
+        reader.readAsDataURL(await response.blob());
+        reader.onloadend = function() {
+          let base64data = reader.result;
+          downloadPDF(base64data);
+        };
+      });
   };
 
   updateQty = (index, value) => {
@@ -125,9 +145,7 @@ class App extends React.Component {
             )
           ) }
         </div>
-        <Button onClick={ () => {
-          alert('TODO');
-        } }>Export Cards as PDF</Button>
+        <Button onClick={ this.exportPDF }>Export Cards as PDF</Button>
         <Button onClick={ this.downloadCards }>Export Cards as JSON</Button>
         <Button onClick={ () => {
           alert('TODO');
