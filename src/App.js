@@ -1,4 +1,5 @@
 import React from 'react';
+import { v1 as uuid } from 'uuid';
 import './App.css';
 import 'semantic-ui-css/semantic.min.css';
 import { Input, Button } from 'semantic-ui-react';
@@ -58,7 +59,7 @@ class App extends React.Component {
   };
 
   exportPDF = () => {
-    fetch(`https://deck-builder-api.herokuapp.com/deck/${ this.state.deckId }/pdf`)
+    fetch(`https://deck-builder-api.herokuapp.com/deck/${ this.state.deckId }/pdf/${ uuid() }`)
       .then(async (response) => {
         const downloadPDF = (data) => {
           const dlAnchorElem = document.createElement('a');
