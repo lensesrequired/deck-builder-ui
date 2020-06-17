@@ -10,6 +10,7 @@ class App extends React.Component {
 
     this.state = {
       isLoading: false,
+      isDownloading: false,
       deckId: '5ee8173ff5e32e48a1e6b1e4',
       cards: []
     };
@@ -45,6 +46,7 @@ class App extends React.Component {
   };
 
   downloadCards = () => {
+    this.setState({ isDownloading: true });
     const { cards } = JSON.parse(JSON.stringify(this.state));
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(
       JSON.stringify(cards.map((c) => {
@@ -56,9 +58,11 @@ class App extends React.Component {
     dlAnchorElem.setAttribute('href', dataStr);
     dlAnchorElem.setAttribute('download', 'deck.json');
     dlAnchorElem.click();
+    this.setState({ isDownloading: false });
   };
 
   exportPDF = () => {
+    this.setState({ isDownloading: true });
     fetch(`https://deck-builder-api.herokuapp.com/deck/${ this.state.deckId }/pdf/${ uuid() }`)
       .then(async (response) => {
         const downloadPDF = (data) => {
@@ -66,6 +70,7 @@ class App extends React.Component {
           dlAnchorElem.setAttribute('href', `${ data }`);
           dlAnchorElem.setAttribute('download', 'deck.pdf');
           dlAnchorElem.click();
+          this.setState({ isDownloading: false });
         };
 
         let reader = new FileReader();
@@ -147,11 +152,17 @@ class App extends React.Component {
             )
           ) }
         </div>
-        <Button onClick={ this.exportPDF }>Export Cards as PDF</Button>
-        <Button onClick={ this.downloadCards }>Export Cards as JSON</Button>
-        <Button onClick={ () => {
-          alert('TODO');
-        } }>Play Game!</Button>
+        <div className={ 'row' }>
+          <Button onClick={ this.exportPDF }>
+            { this.state.isDownloading ? 'Exporting...' : 'Export Cards as PDF' }
+          </Button>
+          <Button onClick={ this.downloadCards }>
+            { this.state.isDownloading ? 'Exporting...' : 'Export Cards as JSON' }
+          </Button>
+          <Button onClick={ () => {
+            alert('TODO');
+          } }>Play Game!</Button>
+        </div>
       </main>
     );
   }
