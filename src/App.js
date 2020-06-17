@@ -114,19 +114,20 @@ class App extends React.Component {
     return (
       <main>
         <h1>Build a Deck</h1>
-        <Button content={ 'Upload Cards' } onClick={ () => this.fileInputRef.current.click() }/>
-        <input
-          ref={ this.fileInputRef }
-          type="file" hidden
-          onChange={ this.fileChange }/>
-        <Button onClick={ () => {
-          alert('TODO');
-        } }>Add a Card</Button>
-        <Button>
-          <a href={ `${ process.env.PUBLIC_URL }/deck_template.json` } download={ `deck_template.json` }>
-            Download Template
-          </a>
-        </Button>
+        <div className={ 'row' }>
+          <Button content={ 'Upload Cards' } onClick={ () => this.fileInputRef.current.click() }/>
+          <input
+            ref={ this.fileInputRef }
+            type="file" hidden
+            onChange={ this.fileChange }/>
+          <Button onClick={ () => {
+            alert('TODO');
+          } }>Add a Card</Button>
+          <Button>
+            <a href={ `${ process.env.PUBLIC_URL }/deck_template.json` } download={ `deck_template.json` }>
+              Download Template
+            </a>
+          </Button></div>
         <div style={ {
           display: 'flex', width: '100vw', height: '80vh',
           overflowY: 'scroll', flexWrap: 'wrap', margin: '5px',
