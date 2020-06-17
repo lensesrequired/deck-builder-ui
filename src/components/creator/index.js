@@ -1,10 +1,9 @@
 import React from 'react';
 import { v1 as uuid } from 'uuid';
-import './App.css';
 import 'semantic-ui-css/semantic.min.css';
 import { Input, Button } from 'semantic-ui-react';
 
-class App extends React.Component {
+class Creator extends React.Component {
   constructor(props) {
     super(props);
 
@@ -168,4 +167,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default Creator;
