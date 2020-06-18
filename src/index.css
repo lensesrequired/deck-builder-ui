@@ -49,3 +49,21 @@ a {
 a:hover {
     border-bottom: 1px solid #0076ff;
 }
+
+.ui.inverted.dimmer {
+    background-color: rgba(255, 255, 255, .5) !important;
+}
+
+.ui.inverted.dimmer:hover {
+    background-color: rgba(255, 255, 255, .3) !important;
+}
+
+.ui.inverted.dimmer i {
+    color: gray !important;
+}
+
+.ui.inverted.dimmer:hover i {
+    color: black !important;
+}
+
+
