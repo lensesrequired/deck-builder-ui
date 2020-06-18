@@ -132,7 +132,7 @@ class CardModal extends React.Component {
         </Modal.Content>
         <Modal.Actions>
           <Button basic color='red' onClick={ onClose }>Cancel</Button>
-          <Button color='green' onClick={ () => onSave(card, additions) }>Save</Button>
+          <Button color='green' onClick={ () => onSave(card, additions, discard, destroy) }>Save</Button>
         </Modal.Actions>
       </Modal>
     );

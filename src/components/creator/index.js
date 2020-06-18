@@ -48,7 +48,7 @@ class Creator extends React.Component {
     });
   };
 
-  addCard = async (card, additionActions) => {
+  addCard = async (card, additionActions, discard, destroy) => {
     const { cards } = this.state;
     const newCard = {
       ...card,
@@ -61,6 +61,12 @@ class Creator extends React.Component {
         }, [])
       }
     };
+    if (!discard) {
+      newCard.actions.discardQty = 0;
+    }
+    if (!destroy) {
+      newCard.actions.destroyQty = 0;
+    }
     this.state.editCardIndex > -1 ? cards.splice(this.state.editCardIndex, 1, newCard) : cards.push(newCard);
     this.updateCards(cards);
   };
