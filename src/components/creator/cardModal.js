@@ -62,6 +62,7 @@ class CardModal extends React.Component {
       const editMode = !!card.name;
       this.setState({
         card: editMode ? card : JSON.parse(JSON.stringify(DEFAULT_CARD)), editMode,
+        discard: editMode && card.actions.discardQty != '0', destroy: editMode && card.actions.destroyQty != '0',
         additions: editMode ? card.actions.additions.reduce((acc, addition) => {
           acc[addition.type] = addition.qty;
           return acc;
@@ -81,12 +82,15 @@ class CardModal extends React.Component {
           <ArtModal art={ card.art } select={ this.selectArt }/>
           <Modal.Description>
             <Form.Group>
-              <Form.Input label={ 'Name' } name={ 'name' } onChange={ this.onInput }/>
-              <Form.Input label={ 'Qty' } name={ 'qty' } type={ 'number' } onChange={ this.onInput }/>
+              <Form.Input label={ 'Name' } name={ 'name' } value={ card.name || '' } onChange={ this.onInput }/>
+              <Form.Input label={ 'Qty' } name={ 'qty' } type={ 'number' } value={ card.qty || '1' }
+                          onChange={ this.onInput }/>
             </Form.Group>
             <Form.Group>
-              <Form.Input label={ 'Cost' } name={ 'costBuy' } type={ 'number' } onChange={ this.onInput }/>
-              <Form.Input label={ 'Points' } name={ 'victoryPoints' } type={ 'number' } onChange={ this.onInput }/>
+              <Form.Input label={ 'Cost' } name={ 'costBuy' } type={ 'number' } value={ card.costBuy || '' }
+                          onChange={ this.onInput }/>
+              <Form.Input label={ 'Points' } name={ 'victoryPoints' } type={ 'number' }
+                          value={ card.victoryPoints || '' } onChange={ this.onInput }/>
             </Form.Group>
             <Form.Field>
               <label>Actions</label>
@@ -99,24 +103,30 @@ class CardModal extends React.Component {
                 <Input label={ 'Buys' } type={ 'number' } name={ 'Buy' } value={ additions.Buy || '0' }
                        style={ { padding: '5px 0' } } onChange={ this.onAdditionChange }/>
               </Form.Field>
-              <Form.Checkbox label={ 'Discard Action' } name={ 'discard' } onChange={ this.flipAction }/>
+              <Form.Checkbox label={ 'Discard Action' } name={ 'discard' } checked={ discard }
+                             onChange={ this.flipAction }/>
               { discard ?
                 <Form.Group>
-                  <Input label={ 'Qty' } type={ 'number' } name={ 'discardQty' } onChange={ this.onActionChange }/>
-                  <Form.Checkbox label={ 'Require' }
+                  <Input label={ 'Qty' } type={ 'number' } name={ 'discardQty' } value={ card.actions.discardQty }
+                         onChange={ this.onActionChange }/>
+                  <Form.Checkbox label={ 'Require' } checked={ card.actions.discardRequired }
                                  onChange={ () => this.onActionChange(null,
-                                   { name: 'discardRequired', value: card.actions.discardRequired }) }/>
-                </Form.Group> : null }
-              <Form.Checkbox label={ 'Destroy Action' } name={ 'destroy' } onChange={ this.flipAction }/>
+                                   { name: 'discardRequired', value: !card.actions.discardRequired }) }/>
+                </Form.Group> : null
+              }
+              <Form.Checkbox label={ 'Destroy Action' } name={ 'destroy' } checked={ destroy }
+                             onChange={ this.flipAction }/>
               { destroy ?
                 <Form.Group>
-                  <Input label={ 'Qty' } type={ 'number' } name={ 'destroyQty' } onChange={ this.onActionChange }/>
-                  <Form.Checkbox label={ 'Require' }
+                  <Input label={ 'Qty' } type={ 'number' } name={ 'destroyQty' } value={ card.actions.destroyQty }
+                         onChange={ this.onActionChange }/>
+                  <Form.Checkbox label={ 'Require' } checked={ card.actions.destroyRequired }
                                  onChange={ () => this.onActionChange(null,
-                                   { name: 'destroyRequired', value: card.actions.destroyRequired }) }/>
-                </Form.Group> : null }
+                                   { name: 'destroyRequired', value: !card.actions.destroyRequired }) }/>
+                </Form.Group> : null
+              }
               <Form.Input label={ 'Buying Power' } name={ 'buyingPower' } type={ 'number' }
-                          onChange={ this.onActionChange }/>
+                          value={ card.actions.buyingPower || '' } onChange={ this.onActionChange }/>
             </Form.Field>
           </Modal.Description>
         </Modal.Content>
