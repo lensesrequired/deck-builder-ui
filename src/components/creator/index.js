@@ -189,7 +189,7 @@ class Creator extends React.Component {
         <div className={ 'row' }>
           <Button onClick={ this.exportPDF }>{ isDownloading ? 'Exporting...' : 'Export Cards as PDF' }</Button>
           <Button onClick={ this.downloadCards }>{ isDownloading ? 'Exporting...' : 'Export Cards as JSON' }</Button>
-          <Button onClick={ () => alert('TODO') }>Play Game!</Button>
+          <Button onClick={ () => window.location = '/game' }>Play Game!</Button>
         </div>
       </main>
     );
