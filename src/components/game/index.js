@@ -1,7 +1,6 @@
 import React from 'react';
-import { v1 as uuid } from 'uuid';
 import 'semantic-ui-css/semantic.min.css';
-import { Input, Button } from 'semantic-ui-react';
+import SettingsModal from './settingsModal';
 
 class Game extends React.Component {
   constructor(props) {
@@ -9,27 +8,30 @@ class Game extends React.Component {
 
     this.state = {
       isLoading: false,
-      deckId: '5ee8173ff5e32e48a1e6b1e4',
-      cards: []
+      game: {}
     };
   }
 
-  getCards = async () => {
+  getGame = async () => {
     this.setState({ isLoading: true });
-    fetch('https://deck-builder-api.herokuapp.com/deck/5ee8173ff5e32e48a1e6b1e4')
+    fetch('https://deck-builder-api.herokuapp.com/games/' + this.props.id)
       .then(async (response) => {
-        const deck = await response.json();
-        const { cards } = deck;
+        const game = await response.json();
 
-        this.setState({ cards, isLoading: false });
+        this.setState({ game, isLoading: false });
       });
   };
 
+  componentDidMount() {
+    this.getGame();
+  }
+
   render() {
-    const { isLoading, isDownloading, isModalOpen, editCard, cards } = this.state;
+    const { game } = this.state;
     return (
       <main>
         <h1>Play a Game</h1>
+        <SettingsModal isOpen={ !game.settings || (game.curr_player || -1) < 0 }/>
       </main>
     );
   }

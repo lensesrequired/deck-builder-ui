@@ -113,7 +113,6 @@ class Creator extends React.Component {
     fetch(`https://deck-builder-api.herokuapp.com/games/create/${ this.state.deckId }`, { method: 'POST' })
       .then(async (response) => {
         const gameId = await response.json();
-        console.log(gameId);
         window.location = '/game?id=' + gameId;
       });
   };
