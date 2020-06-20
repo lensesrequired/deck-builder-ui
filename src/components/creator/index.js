@@ -108,6 +108,16 @@ class Creator extends React.Component {
       });
   };
 
+  createGame = () => {
+    this.setState({ isDownloading: true });
+    fetch(`https://deck-builder-api.herokuapp.com/games/create/${ this.state.deckId }`, { method: 'POST' })
+      .then(async (response) => {
+        const gameId = await response.json();
+        console.log(gameId);
+        window.location = '/game?id=' + gameId;
+      });
+  };
+
   updateQty = (index, value) => {
     const { cards } = this.state;
     const card = cards[index];
@@ -189,7 +199,7 @@ class Creator extends React.Component {
         <div className={ 'row' }>
           <Button onClick={ this.exportPDF }>{ isDownloading ? 'Exporting...' : 'Export Cards as PDF' }</Button>
           <Button onClick={ this.downloadCards }>{ isDownloading ? 'Exporting...' : 'Export Cards as JSON' }</Button>
-          <Button onClick={ () => window.location = '/game' }>Play Game!</Button>
+          <Button onClick={ this.createGame }>Play Game!</Button>
         </div>
       </main>
     );
