@@ -31,11 +31,11 @@ class Game extends React.Component {
   };
 
   saveSettings = (settings) => {
-    settings.marketplace = settings.marketplace.map((deck) => (deck.map((card) => {
+    settings.marketplace = settings.marketplace.map((card) => {
       delete card.id;
       delete card.image;
       return card;
-    })));
+    });
     settings.startingDeck = settings.startingDeck.map((card) => {
       delete card.id;
       delete card.image;
@@ -56,12 +56,16 @@ class Game extends React.Component {
   }
 
   render() {
-    const { game, deck } = this.state;
+    const { game = {}, deck } = this.state;
     return (
       <main>
         <h1>Play a Game</h1>
-        <SettingsModal isOpen={ !game.settings || (game.curr_player || -1) < 0 } deck={ deck }
+        <SettingsModal isOpen={ deck.length && (!game.settings || game.curr_player < 0) } deck={ deck }
                        saveSettings={ this.saveSettings }/>
+        <div>Discard: { (game.discard || []).length } Cards</div>
+        <div>Destroyed: { (game.destroy || []).length } Cards</div>
+        <div>Marketplace</div>
+        <div></div>
       </main>
     );
   }

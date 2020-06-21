@@ -37,13 +37,7 @@ class SettingsModal extends React.Component {
     };
   }
 
-  addMarketplaceDeck = () => {
-    const { game: { marketplace } } = this.state;
-    marketplace.push([]);
-    this.setState({ game: { ...this.state.game, marketplace } });
-  };
-
-  setDeck = (startingDeck, selectedCards, deckName, deckIndex = -1) => {
+  setDeck = (startingDeck, selectedCards, deckName) => {
     const newDeck = startingDeck.reduce((acc, card) => {
       if (selectedCards[card.id] && selectedCards[card.id] !== '0') {
         const newCard = JSON.parse(JSON.stringify(card));
@@ -53,13 +47,7 @@ class SettingsModal extends React.Component {
       return acc;
     }, []);
 
-    if (deckIndex > -1) {
-      const { marketplace } = this.state.game;
-      marketplace[deckIndex] = newDeck;
-      this.setState({ game: { ...this.state.game, marketplace } });
-    } else {
-      this.setState({ game: { ...this.state.game, [deckName]: newDeck } });
-    }
+    this.setState({ game: { ...this.state.game, [deckName]: newDeck } });
   };
 
   onInput = (event, { name, value }) => {
@@ -80,13 +68,11 @@ class SettingsModal extends React.Component {
       </Form.Field>
     </div>,
     'Marketplace': <div>
-      <Button onClick={ this.addMarketplaceDeck }>Add Deck to Marketplace</Button>
       <Form.Field><label>Marketplace</label>
-        { this.state.game.marketplace.map((deck, index) => (
-          <div><CardPicker cards={ this.state.deck.cards || [] } deckIndex={ index } onSave={ this.setDeck }/>
-            Number of Cards: { deck.reduce((acc, card) => (acc + parseInt(card.qty, 10)), 0) }
-          </div>
-        )) }
+        <div><CardPicker cards={ this.state.deck.cards || [] } deckName={ 'marketplace' } onSave={ this.setDeck }/>
+          Number of Cards: { this.state.game.marketplace.reduce((acc, card) => (acc + parseInt(card.qty, 10)), 0) }
+        </div>
+        ))
       </Form.Field>
     </div>,
     'Game Play': <div>

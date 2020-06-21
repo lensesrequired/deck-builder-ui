@@ -23,7 +23,7 @@ class CardPicker extends React.Component {
 
   render() {
     const { selectedCards } = this.state;
-    const { onSave, cards = [], deckName, deckIndex } = this.props;
+    const { onSave, cards = [], deckName } = this.props;
     return (
       <Modal as={ Form } trigger={ <Button>Select Cards</Button> } centered={ false }>
         <Modal.Header>{ 'Select Cards' }</Modal.Header>
@@ -39,7 +39,7 @@ class CardPicker extends React.Component {
           )) }
         </Modal.Content>
         <Modal.Actions>
-          <Button color='green' onClick={ () => onSave(cards, selectedCards, deckName, deckIndex) }>Save</Button>
+          <Button color='green' onClick={ () => onSave(cards, selectedCards, deckName) }>Save</Button>
         </Modal.Actions>
       </Modal>
     );
