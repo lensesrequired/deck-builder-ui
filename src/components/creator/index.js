@@ -48,27 +48,21 @@ class Creator extends React.Component {
     });
   };
 
-  addCard = async (card, additionActions, discard, destroy) => {
+  addCard = async (card, actions) => {
     const { cards } = this.state;
     const newCard = {
       ...card,
-      actions: {
-        ...card.actions, additions: Object.entries(additionActions).reduce((acc, [type, qty]) => {
-          if (qty) {
-            acc.push({ type, qty });
-          }
-          return acc;
-        }, [])
-      }
+      actions: Object.entries(actions).reduce((acc, [type, { qty, required }]) => {
+        console.log(type, qty, required);
+        if (qty) {
+          acc.push({ type, qty, required });
+        }
+        return acc;
+      }, [])
     };
-    if (!discard) {
-      newCard.actions.discardQty = 0;
-    }
-    if (!destroy) {
-      newCard.actions.destroyQty = 0;
-    }
     this.state.editCardIndex > -1 ? cards.splice(this.state.editCardIndex, 1, newCard) : cards.push(newCard);
     this.updateCards(cards);
+    this.setState({ isModalOpen: false });
   };
 
   downloadCards = () => {
@@ -179,7 +173,7 @@ class Creator extends React.Component {
           overflowY: 'scroll', flexWrap: 'wrap', margin: '5px',
           backgroundColor: 'lightgray'
         } }>
-          { isLoading ? <p>{ 'LOADING' }</p> : cards.map(
+          { isLoading ? <p>{ 'LOADING' }</p> : (cards || []).map(
             (card, index) => (
               <div style={ { padding: '10px', display: 'flex', flexDirection: 'column' } }>
                 { card.image ?

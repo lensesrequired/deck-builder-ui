@@ -2,21 +2,16 @@
   {
     "qty": 3,
     "art": "characters/03.png",
-    "name": "Blind Dude",
-    "actions": {
-      "additions": [
-        {
-          "type": "Draw",
-          "qty": 1
-        }
-      ],
-      "discardQty": 1,
-      "discardRequired": true,
-      "destroyQty": 0,
-      "destroyRequired": true,
-      "buyingPower": 2
-    },
+    "name": "Some Dude",
+    "actions": [
+      {
+        "type": "draw",
+        "required": true,
+        "qty": 1
+      }
+    ],
     "costBuy": 3,
-    "victoryPoints": 1
+    "victoryPoints": 1,
+    "buyingPower": 2
   }
 ]
