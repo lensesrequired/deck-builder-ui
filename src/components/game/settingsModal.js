@@ -161,7 +161,7 @@ class SettingsModal extends React.Component {
           { this.getFormPart() }
         </Modal.Content>
         <Modal.Actions>
-          <Button color='green' onClick={ this.saveSettings }
+          <Button color='green' onClick={ () => saveSettings(this.state.game) }
                   disabled={ steps.some(({ valid }) => !valid) }>Save</Button>
         </Modal.Actions>
       </Modal>

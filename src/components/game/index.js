@@ -41,13 +41,14 @@ class Game extends React.Component {
       delete card.image;
       return card;
     });
-    fetch('https://deck-builder-api.herokuapp.com/deck/' + this.props.id, {
+    fetch('https://deck-builder-api.herokuapp.com/games/' + this.props.id, {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(JSON.parse(settings))
-    })
-      .then(async () => {
-        this.getGame();
-      });
+      body: JSON.stringify(settings)
+    }).then(async () => {
+      this.getGame();
+    }).catch((err) => {
+      console.log(err);
+    });
   };
 
   componentDidMount() {
