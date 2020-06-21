@@ -6,7 +6,7 @@
     "actions": [
       {
         "type": "draw",
-        "reqed": true,
+        "required": true,
         "qty": 1
       }
     ],
