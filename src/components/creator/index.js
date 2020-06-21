@@ -53,7 +53,6 @@ class Creator extends React.Component {
     const newCard = {
       ...card,
       actions: Object.entries(actions).reduce((acc, [type, { qty, required }]) => {
-        console.log(type, qty, required);
         if (qty) {
           acc.push({ type, qty, required });
         }
