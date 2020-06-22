@@ -72,7 +72,6 @@ class SettingsModal extends React.Component {
         <div><CardPicker cards={ this.state.deck.cards || [] } deckName={ 'marketplace' } onSave={ this.setDeck }/>
           Number of Cards: { this.state.game.marketplace.reduce((acc, card) => (acc + parseInt(card.qty, 10)), 0) }
         </div>
-        ))
       </Form.Field>
     </div>,
     'Game Play': <div>

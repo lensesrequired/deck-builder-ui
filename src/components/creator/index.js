@@ -1,6 +1,5 @@
 import React from 'react';
 import { v1 as uuid } from 'uuid';
-import 'semantic-ui-css/semantic.min.css';
 import { Input, Button } from 'semantic-ui-react';
 import CardModal from './cardModal';
 
