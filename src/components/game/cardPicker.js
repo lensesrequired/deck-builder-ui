@@ -28,15 +28,19 @@ class CardPicker extends React.Component {
       <Modal as={ Form } trigger={ <Button>Select Cards</Button> } centered={ false }>
         <Modal.Header>{ 'Select Cards' }</Modal.Header>
         <Modal.Content>
-          { cards.map((card) => (
-            <div>
-              <img alt={ 'card' } style={ { height: '250px', marginBottom: '10px' } }
-                   src={ `data:image/png;base64,${ card.image }` }/>
-              <div><Input type="number" label='Qty' value={ selectedCards[card.id] || '' }
-                          onChange={ (_, { value }) => this.selectCard(card.id, value) }/>
+          <div style={ {
+            display: 'flex', flexWrap: 'wrap', margin: '5px'
+          } }>
+            { cards.map((card) => (
+              <div style={ { padding: '10px', display: 'flex', flexDirection: 'column' } }>
+                <img alt={ 'card' } style={ { height: '300px', marginBottom: '10px' } }
+                     src={ `data:image/png;base64,${ card.image }` }/>
+                <div><Input type="number" label='Qty' value={ selectedCards[card.id] || '' }
+                            onChange={ (_, { value }) => this.selectCard(card.id, value) }/>
+                </div>
               </div>
-            </div>
-          )) }
+            )) }
+          </div>
         </Modal.Content>
         <Modal.Actions>
           <Button color='green' onClick={ () => onSave(cards, selectedCards, deckName) }>Save</Button>
