@@ -28,7 +28,6 @@ class Creator extends React.Component {
     fetch(url)
       .then(async (response) => {
         const images = await response.json();
-        console.log(images);
         images.forEach(({ id, data, modified_at }) => {
           cardImages[id] = { data, modified_at };
         });
@@ -46,7 +45,6 @@ class Creator extends React.Component {
         const { cards } = deck;
         if (getImages) {
           cards.forEach(({ id, modified_at }) => {
-            console.log(id, Math.abs(new Date(cardImages[id].modified_at) - new Date(modified_at)));
             if (!cardImages[id] || Math.abs(new Date(cardImages[id].modified_at) - new Date(modified_at)) > 1000) {
               cardImages[id].data = '';
               this.getCardImage(id);
@@ -99,7 +97,8 @@ class Creator extends React.Component {
     const { cards } = JSON.parse(JSON.stringify(this.state));
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(
       JSON.stringify(cards.map((c) => {
-        delete c.image;
+        delete c.id;
+        delete c.modified_at;
         return c;
       }))
     );
