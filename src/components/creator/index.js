@@ -79,7 +79,7 @@ class Creator extends React.Component {
       ...card,
       modified_at: new Date(),
       actions: Object.entries(actions).reduce((acc, [type, { qty, required }]) => {
-        if (qty) {
+        if (qty && qty !== '0') {
           acc.push({ type, qty, required });
         }
         return acc;
