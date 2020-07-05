@@ -11,7 +11,7 @@ class Creator extends React.Component {
       isLoading: false,
       isDownloading: false,
       isModalOpen: false,
-      images: {},
+      cardImages: {},
       cards: [],
       editCard: {},
       editCardIndex: -1
@@ -20,25 +20,41 @@ class Creator extends React.Component {
   }
 
   getCardImage = async (id) => {
-    this.setState({ isLoading: true });
-    fetch('https://deck-builder-api.herokuapp.com/deck/' + this.props.id)
+    const { cardImages } = this.state;
+    let url = 'https://deck-builder-api.herokuapp.com/deck/images/' + this.props.id;
+    if (id) {
+      url += `?card_id=${ id }`;
+    }
+    fetch(url)
       .then(async (response) => {
-        const deck = await response.json();
-        console.log(deck);
-        const { cards } = deck;
+        const images = await response.json();
+        console.log(images);
+        images.forEach(({ id, data, modified_at }) => {
+          cardImages[id] = { data, modified_at };
+        });
 
-        this.setState({ cards, isLoading: false });
+        this.setState({ cardImages });
       });
   };
 
-  getCards = async (showImages = true) => {
+  getCards = async (getImages = false) => {
+    const { cardImages } = this.state;
     this.setState({ isLoading: true });
     fetch('https://deck-builder-api.herokuapp.com/deck/' + this.props.id)
       .then(async (response) => {
         const deck = await response.json();
         const { cards } = deck;
+        if (getImages) {
+          cards.forEach(({ id, modified_at }) => {
+            console.log(id, Math.abs(new Date(cardImages[id].modified_at) - new Date(modified_at)));
+            if (!cardImages[id] || Math.abs(new Date(cardImages[id].modified_at) - new Date(modified_at)) > 1000) {
+              cardImages[id].data = '';
+              this.getCardImage(id);
+            }
+          });
+        }
 
-        this.setState({ cards, isLoading: false });
+        this.setState({ cards, cardImages, isLoading: false });
       });
   };
 
@@ -52,7 +68,7 @@ class Creator extends React.Component {
       }))
     }).then(() => {
       if (reload) {
-        this.getCards(false);
+        this.getCards(true);
       } else {
         this.setState({ cards });
       }
@@ -168,7 +184,7 @@ class Creator extends React.Component {
 
   componentDidMount(prevProps, prevState, snapshot) {
     if (this.props.id) {
-      return this.getCards();
+      return [this.getCards(), this.getCardImage()];
     }
 
     fetch('https://deck-builder-api.herokuapp.com/deck', { method: 'POST' })
@@ -180,12 +196,12 @@ class Creator extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.id !== prevProps.id) {
-      return this.getCards();
+      return [this.getCards(), this.getCardImage()];
     }
   }
 
   render() {
-    const { isLoading, isDownloading, isModalOpen, editCard, cards } = this.state;
+    const { isLoading, isDownloading, isModalOpen, editCard, cards, cardImages } = this.state;
     return (
       <main>
         <h1>Build a Deck</h1>
@@ -208,9 +224,9 @@ class Creator extends React.Component {
           { isLoading ? <p>{ 'LOADING' }</p> : (cards || []).map(
             (card, index) => (
               <div style={ { padding: '10px', display: 'flex', flexDirection: 'column' } }>
-                { card.image ?
+                { (cardImages[card.id] || {}).data ?
                   <img alt={ 'card' } style={ { height: '400px', marginBottom: '10px' } }
-                       src={ `data:image/png;base64,${ card.image }` }/> : 'Loading...' }
+                       src={ `data:image/png;base64,${ cardImages[card.id].data }` }/> : 'Loading...' }
                 <Input label={ 'Qty' } style={ { marginBottom: '3px' } } type={ 'number' } min={ 1 }
                        value={ card.qty || '1' } onChange={ (_, { value }) => this.updateQty(index, value) }/>
                 <div className={ 'row' }>

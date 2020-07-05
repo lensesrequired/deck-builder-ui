@@ -8,7 +8,6 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
 
 function useQuery() {
-  console.log(useLocation());
   return new URLSearchParams(useLocation().search);
 }
 
