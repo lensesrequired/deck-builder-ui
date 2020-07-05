@@ -5,7 +5,7 @@ import './index.css';
 import Creator from './components/creator';
 import Game from './components/game';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
 
 function useQuery() {
   console.log(useLocation());
@@ -19,16 +19,22 @@ const AppRouter = () => (
 );
 
 const App = () => {
-  const query = useQuery();
+  const query = (useQuery() || new Map());
+  const history = useHistory();
+  const id = query.get('id') || '';
+
+  const setId = (id) => {
+    history.push(`/?id=${ id }`);
+  };
 
   return (
     <div>
       <Switch>
         <Route exact path="/">
-          <Creator/>
+          <Creator id={ id } setId={ setId }/>
         </Route>
         <Route path="/game">
-          <Game id={ (query || {}).get('id') }/>
+          <Game id={ id }/>
         </Route>
       </Switch>
     </div>

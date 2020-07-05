@@ -11,7 +11,7 @@ class Creator extends React.Component {
       isLoading: false,
       isDownloading: false,
       isModalOpen: false,
-      deckId: '5ee8173ff5e32e48a1e6b1e4',
+      images: {},
       cards: [],
       editCard: {},
       editCardIndex: -1
@@ -19,9 +19,21 @@ class Creator extends React.Component {
     this.fileInputRef = React.createRef();
   }
 
-  getCards = async () => {
+  getCardImage = async (id) => {
     this.setState({ isLoading: true });
-    fetch('https://deck-builder-api.herokuapp.com/deck/5ee8173ff5e32e48a1e6b1e4')
+    fetch('https://deck-builder-api.herokuapp.com/deck/' + this.props.id)
+      .then(async (response) => {
+        const deck = await response.json();
+        console.log(deck);
+        const { cards } = deck;
+
+        this.setState({ cards, isLoading: false });
+      });
+  };
+
+  getCards = async (showImages = true) => {
+    this.setState({ isLoading: true });
+    fetch('https://deck-builder-api.herokuapp.com/deck/' + this.props.id)
       .then(async (response) => {
         const deck = await response.json();
         const { cards } = deck;
@@ -31,7 +43,7 @@ class Creator extends React.Component {
   };
 
   updateCards = async (cards, reload = true) => {
-    fetch('https://deck-builder-api.herokuapp.com/cards/' + this.state.deckId, {
+    fetch('https://deck-builder-api.herokuapp.com/cards/' + this.props.id, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(JSON.parse(JSON.stringify(cards)).map((c) => {
@@ -40,7 +52,7 @@ class Creator extends React.Component {
       }))
     }).then(() => {
       if (reload) {
-        this.getCards();
+        this.getCards(false);
       } else {
         this.setState({ cards });
       }
@@ -51,6 +63,7 @@ class Creator extends React.Component {
     const { cards } = this.state;
     const newCard = {
       ...card,
+      modified_at: new Date(),
       actions: Object.entries(actions).reduce((acc, [type, { qty, required }]) => {
         if (qty) {
           acc.push({ type, qty, required });
@@ -58,7 +71,9 @@ class Creator extends React.Component {
         return acc;
       }, [])
     };
-    this.state.editCardIndex > -1 ? cards.splice(this.state.editCardIndex, 1, newCard) : cards.push(newCard);
+    this.state.editCardIndex > -1 ?
+      cards.splice(this.state.editCardIndex, 1, newCard) :
+      cards.push({ id: uuid(), ...newCard });
     this.updateCards(cards);
     this.setState({ isModalOpen: false });
   };
@@ -81,7 +96,7 @@ class Creator extends React.Component {
 
   exportPDF = () => {
     this.setState({ isDownloading: true });
-    fetch(`https://deck-builder-api.herokuapp.com/deck/${ this.state.deckId }/pdf/${ uuid() }`)
+    fetch(`https://deck-builder-api.herokuapp.com/deck/${ this.props.id }/pdf/${ uuid() }`)
       .then(async (response) => {
         const downloadPDF = (data) => {
           const dlAnchorElem = document.createElement('a');
@@ -102,7 +117,7 @@ class Creator extends React.Component {
 
   createGame = () => {
     this.setState({ isDownloading: true });
-    fetch(`https://deck-builder-api.herokuapp.com/games/create/${ this.state.deckId }`, { method: 'POST' })
+    fetch(`https://deck-builder-api.herokuapp.com/games/create/${ this.props.id }`, { method: 'POST' })
       .then(async (response) => {
         const gameId = await response.json();
         window.location = '/game?id=' + gameId;
@@ -138,7 +153,12 @@ class Creator extends React.Component {
     reader.onload = function onReaderLoad(event) {
       let obj = JSON.parse(event.target.result);
       if (Array.isArray(obj)) {
-        setCards([...cards, ...obj]);
+        setCards([
+          ...cards, ...(obj.map((card) => {
+            card.id = uuid();
+            card.modified_at = new Date();
+            return card;
+          }))]);
       } else {
         // TODO: Show error
       }
@@ -147,7 +167,21 @@ class Creator extends React.Component {
   };
 
   componentDidMount(prevProps, prevState, snapshot) {
-    this.getCards();
+    if (this.props.id) {
+      return this.getCards();
+    }
+
+    fetch('https://deck-builder-api.herokuapp.com/deck', { method: 'POST' })
+      .then(async (response) => {
+        const deckId = await response.json();
+        this.props.setId(deckId);
+      });
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.id !== prevProps.id) {
+      return this.getCards();
+    }
   }
 
   render() {
