@@ -46,7 +46,7 @@ class Creator extends React.Component {
         if (getImages) {
           cards.forEach(({ id, modified_at }) => {
             if (!cardImages[id] || Math.abs(new Date(cardImages[id].modified_at) - new Date(modified_at)) > 1000) {
-              cardImages[id].data = '';
+              cardImages[id] = {};
               this.getCardImage(id);
             }
           });
@@ -226,8 +226,8 @@ class Creator extends React.Component {
                 { (cardImages[card.id] || {}).data ?
                   <img alt={ 'card' } style={ { height: '400px', marginBottom: '10px' } }
                        src={ `data:image/png;base64,${ cardImages[card.id].data }` }/> : 'Loading...' }
-                <Input label={ 'Qty' } style={ { marginBottom: '3px' } } type={ 'number' } min={ 1 }
-                       value={ card.qty || '1' } onChange={ (_, { value }) => this.updateQty(index, value) }/>
+                <Input label={ 'Qty' } style={ { marginBottom: '3px' } } type={ 'number' }
+                       value={ card.qty || '0' } onChange={ (_, { value }) => this.updateQty(index, value) }/>
                 <div className={ 'row' }>
                   <Button onClick={ () => this.openCardModal(index) }>Edit</Button>
                   <Button onClick={ () => this.removeCard(index) }>Remove</Button>

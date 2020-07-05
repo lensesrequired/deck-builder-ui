@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button } from 'semantic-ui-react';
 import ArtModal from './artModal';
 
 const DEFAULT_CARD = {
-  'qty': 0,
+  'qty': 1,
   'art': '',
   'name': '',
   'actions': [],
@@ -90,7 +90,7 @@ class CardModal extends React.Component {
           <Modal.Description>
             <Form.Group>
               <Form.Input label={ 'Name' } name={ 'name' } value={ card.name || '' } onChange={ this.onInput }/>
-              <Form.Input label={ 'Qty' } name={ 'qty' } type={ 'number' } value={ card.qty || '1' }
+              <Form.Input label={ 'Qty' } name={ 'qty' } type={ 'number' } value={ card.qty }
                           onChange={ this.onInput }/>
             </Form.Group>
             <Form.Group>
