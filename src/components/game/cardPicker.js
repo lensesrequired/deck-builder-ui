@@ -23,7 +23,7 @@ class CardPicker extends React.Component {
 
   render() {
     const { selectedCards } = this.state;
-    const { onSave, cards = [], deckName } = this.props;
+    const { onSave, cards = [], images = {}, deckName } = this.props;
     return (
       <Modal as={ Form } trigger={ <Button>Select Cards</Button> } centered={ false }>
         <Modal.Header>{ 'Select Cards' }</Modal.Header>
@@ -33,8 +33,9 @@ class CardPicker extends React.Component {
           } }>
             { cards.map((card) => (
               <div style={ { padding: '10px', display: 'flex', flexDirection: 'column' } }>
-                <img alt={ 'card' } style={ { height: '300px', marginBottom: '10px' } }
-                     src={ `data:image/png;base64,${ card.image }` }/>
+                { images[card.id] ?
+                  <img alt={ 'card' } style={ { height: '300px', marginBottom: '10px' } }
+                       src={ `data:image/png;base64,${ images[card.id].data }` }/> : 'LOADING...' }
                 <div><Input type="number" label='Qty' value={ selectedCards[card.id] || '' }
                             onChange={ (_, { value }) => this.selectCard(card.id, value) }/>
                 </div>
