@@ -114,12 +114,28 @@ class Game extends React.Component {
     return (<Button onClick={ () => this.turn_action('start') }>Start Turn</Button>);
   };
 
-  playCard = (curr_player, index) => {
-  };
-
   render() {
     const { game = {}, deck, images, isLoading } = this.state;
     const curr_player = game.curr_player > -1 ? game.players[game.curr_player] : {};
+    console.log(game.game_ended);
+    if (game.game_ended) {
+      return (<main>
+        Winner: { game.game_ended.winner[0] } with { game.game_ended.winner[1] } points!
+        <table>
+          <thead>
+          <tr>
+            <td style={ { border: '1px solid black' } }><strong>Player</strong></td>
+            <td style={ { border: '1px solid black' } }><strong>Points</strong></td>
+          </tr>
+          </thead>
+          { Object.entries(game.game_ended.player_points)
+            .map(([player, points]) => (<tr>
+              <td style={ { border: '1px solid black' } }>{ player }</td>
+              <td style={ { border: '1px solid black' } }>{ points }</td>
+            </tr>)) }
+        </table>
+      </main>);
+    }
     return (
       <main>
         { isLoading ? 'LOADING...' : null }
