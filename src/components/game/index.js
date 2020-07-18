@@ -1,7 +1,8 @@
 import React from 'react';
-import { v1 as uuid } from 'uuid';
+import { Button, Table } from 'semantic-ui-react';
+import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 import SettingsModal from './settingsModal';
-import { Button } from 'semantic-ui-react';
+import 'react-semantic-toasts/styles/react-semantic-alert.css';
 
 class Game extends React.Component {
   constructor(props) {
@@ -20,15 +21,27 @@ class Game extends React.Component {
     fetch('https://deck-builder-api.herokuapp.com/games/' + this.props.id)
       .then(async (response) => {
         const game = await response.json();
+        if (!response.ok) {
+          throw ({ title: game.statusText || '', description: game.message || '' });
+        }
         if (getDeck) {
           fetch('https://deck-builder-api.herokuapp.com/deck/' + game.deck_id)
             .then(async (response) => {
               const deck = await response.json();
+              if (!response.ok) {
+                throw ({ title: deck.statusText || '', description: deck.message || '' });
+              }
               this.setState({ game, deck, isLoading: false });
+            })
+            .catch((err) => {
+              toast(err);
             });
         } else {
           this.setState({ game, isLoading: false });
         }
+      })
+      .catch((err) => {
+        toast(err);
       });
   };
 
@@ -37,12 +50,18 @@ class Game extends React.Component {
       .then(async (response) => {
         if (this.state.game.deck_id) {
           const card_images = await response.json();
+          if (!response.ok) {
+            throw ({ title: card_images.statusText || '', description: card_images.message || '' });
+          }
           const images = card_images.reduce((acc, { id, data, modified_at }) => {
             acc[id] = { data, modified_at };
             return acc;
           }, {});
           this.setState({ images });
         }
+      })
+      .catch((err) => {
+        toast(err);
       });
   };
 
@@ -51,7 +70,13 @@ class Game extends React.Component {
     fetch('https://deck-builder-api.herokuapp.com/games/' + this.props.id + '/start', { method: 'POST' })
       .then(async (response) => {
         const game = await response.json();
+        if (!response.ok) {
+          throw ({ title: game.statusText || '', description: game.message || '' });
+        }
         this.setState({ game, isLoading: false });
+      })
+      .catch((err) => {
+        toast(err);
       });
   };
 
@@ -59,10 +84,14 @@ class Game extends React.Component {
     fetch('https://deck-builder-api.herokuapp.com/games/' + this.props.id, {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(settings)
-    }).then(async () => {
+    }).then(async (response) => {
+      if (!response.ok) {
+        const res = await response.json();
+        throw ({ title: res.statusText || '', description: res.message || '' });
+      }
       this.startGame();
     }).catch((err) => {
-      console.log(err);
+      toast(err);
     });
   };
 
@@ -79,33 +108,40 @@ class Game extends React.Component {
   turn_action = (action) => {
     fetch('https://deck-builder-api.herokuapp.com/games/' + this.props.id + '/player/' + action, { method: 'POST' })
       .then(async (response) => {
-        if (await response.json() !== 'OK') {
-          console.log('ERROR');
+        const res = await response.json();
+        if (!response.ok || await res !== 'OK') {
+          throw ({ title: res.statusText || '', description: res.message || '' });
         } else {
           this.getGame();
         }
+      })
+      .catch((err) => {
+        toast(err);
       });
   };
 
-  card_action = (action, query) => {
+  card_action = (action, query = {}) => {
     let url = `https://deck-builder-api.herokuapp.com/games/${ this.props.id }/player/card/${ action }`;
     if (query) {
       url += `?${ Object.entries(query).map(([key, value]) => (`${ key }=${ value }`)).join('&') }`;
     }
     fetch(url, { method: 'POST' })
       .then(async (response) => {
-        if (await response.json() !== 'OK') {
-          console.log('ERROR');
+        const res = await response.json();
+        if (!response.ok || await res !== 'OK') {
+          throw ({ title: response.statusText || '', description: res.message || '' });
         } else {
           this.getGame();
         }
+      })
+      .catch((err) => {
+        toast(err);
       });
   };
 
   getActionButtons = (curr_player) => {
     if (curr_player.current_turn) {
       return <div>
-        <div>actions left: { JSON.stringify(curr_player.current_turn) }</div>
         <Button onClick={ () => this.card_action('draw', { 'num': 1 }) }>Draw</Button>
         <Button onClick={ () => this.turn_action('end') }>End Turn</Button>
       </div>;
@@ -117,10 +153,11 @@ class Game extends React.Component {
   render() {
     const { game = {}, deck, images, isLoading } = this.state;
     const curr_player = game.curr_player > -1 ? game.players[game.curr_player] : {};
-    console.log(game.game_ended);
+
     if (game.game_ended) {
       return (<main>
-        Winner: { game.game_ended.winner[0] } with { game.game_ended.winner[1] } points!
+        <SemanticToastContainer/>
+        <h2>Winner: { game.game_ended.winner[0] } with { game.game_ended.winner[1] } points!</h2>
         <table>
           <thead>
           <tr>
@@ -138,7 +175,8 @@ class Game extends React.Component {
     }
     return (
       <main>
-        { isLoading ? 'LOADING...' : null }
+        <SemanticToastContainer/>
+        { isLoading ? <div>LOADING...</div> : null }
         <SettingsModal isOpen={ deck.cards && (!game.settings || game.curr_player < 0) } deck={ deck }
                        images={ images } saveSettings={ this.saveSettings }/>
         <div>Destroyed: { (game.destroy || []).length } Cards</div>
@@ -171,23 +209,51 @@ class Game extends React.Component {
               -
               Discard: { (curr_player.discard || []).length } Cards
             </div>
-            <div style={ {
-              display: 'flex', width: '100vw', height: '60vh',
-              overflowY: 'scroll', flexWrap: 'wrap', margin: '5px',
-              backgroundColor: 'lightgray'
-            } }>
-              { curr_player.current_turn && (curr_player.hand || []).map((card, index) => (
-                <div style={ { padding: '10px', display: 'flex', flexDirection: 'column' } }>
-                  { images[card.id] ?
-                    <img alt={ 'card' } style={ { height: '250px', marginBottom: '10px' } }
-                         src={ `data:image/png;base64,${ images[card.id].data }` }/> : 'LOADING...' }
-                  <Button disabled={ card.played } onClick={ () => this.card_action('play', { index }) }>Play</Button>
-                  <div className={ 'row' }>
-                    <Button onClick={ () => this.card_action('discard', { index }) }>Discard</Button>
-                    <Button onClick={ () => this.card_action('destroy', { index }) }>Destroy</Button>
+            <div style={ { display: 'flex', flexDirection: 'row' } }>
+              <div style={ { width: '20vw' } }>
+                <div>Buying Power: { ((curr_player.current_turn || {}).buying_power || {}).optional }</div>
+                <div>Actions Left:</div>
+                <Table definition>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell/>
+                      <Table.HeaderCell>Required</Table.HeaderCell>
+                      <Table.HeaderCell>Optional</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+
+                  <Table.Body>
+                    { Object.entries(curr_player.current_turn || {}).reduce((acc, [action_type, qtys]) => {
+                      if (action_type !== 'buying_power') {
+                        acc.push(<Table.Row>
+                          <Table.Cell>{ action_type }</Table.Cell>
+                          <Table.Cell>{ qtys.required || 0 }</Table.Cell>
+                          <Table.Cell>{ qtys.optional || 0 }</Table.Cell>
+                        </Table.Row>);
+                      }
+                      return acc;
+                    }, []) }
+                  </Table.Body>
+                </Table>
+              </div>
+              <div style={ {
+                display: 'flex', width: '80vw', height: '60vh',
+                overflowY: 'scroll', flexWrap: 'wrap', margin: '5px',
+                backgroundColor: 'lightgray'
+              } }>
+                { curr_player.current_turn && (curr_player.hand || []).map((card, index) => (
+                  <div style={ { padding: '10px', display: 'flex', flexDirection: 'column' } }>
+                    { images[card.id] ?
+                      <img alt={ 'card' } style={ { height: '250px', marginBottom: '10px' } }
+                           src={ `data:image/png;base64,${ images[card.id].data }` }/> : 'LOADING...' }
+                    <Button disabled={ card.played } onClick={ () => this.card_action('play', { index }) }>Play</Button>
+                    <div className={ 'row' }>
+                      <Button onClick={ () => this.card_action('discard', { index }) }>Discard</Button>
+                      <Button onClick={ () => this.card_action('destroy', { index }) }>Destroy</Button>
+                    </div>
                   </div>
-                </div>
-              )) }
+                )) }
+              </div>
             </div>
             <div className={ 'row' } style={ { marginBottom: '10px' } }>
               { this.getActionButtons(curr_player) }
