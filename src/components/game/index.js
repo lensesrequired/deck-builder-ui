@@ -246,10 +246,14 @@ class Game extends React.Component {
                     { images[card.id] ?
                       <img alt={ 'card' } style={ { height: '250px', marginBottom: '10px' } }
                            src={ `data:image/png;base64,${ images[card.id].data }` }/> : 'LOADING...' }
-                    <Button disabled={ card.played } onClick={ () => this.card_action('play', { index }) }>Play</Button>
+                    <Button disabled={ card.played } onClick={ () => this.card_action('play', { index }) }>
+                      { card.played ? 'Played' : 'Play' }
+                    </Button>
                     <div className={ 'row' }>
-                      <Button onClick={ () => this.card_action('discard', { index }) }>Discard</Button>
-                      <Button onClick={ () => this.card_action('destroy', { index }) }>Destroy</Button>
+                      <Button disabled={ card.played }
+                              onClick={ () => this.card_action('discard', { index }) }>Discard</Button>
+                      <Button disabled={ card.played }
+                              onClick={ () => this.card_action('destroy', { index }) }>Destroy</Button>
                     </div>
                   </div>
                 )) }
