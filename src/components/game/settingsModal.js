@@ -13,19 +13,20 @@ class SettingsModal extends React.Component {
           icon: 'user',
           title: 'Players',
           active: true,
-          valid: true
+          valid: () => (this.state.game.numPlayers && this.state.game.numPlayers !== '0' && this.state.game.handSize &&
+            this.state.game.handSize !== '0' && this.state.game.startingDeck.length)
         },
         {
           icon: 'map',
           title: 'Marketplace',
           active: false,
-          valid: true
+          valid: () => (this.state.game.marketplace.length)
         },
         {
           icon: 'trophy',
           title: 'Game Play',
           active: false,
-          valid: true
+          valid: () => (true)
         }
       ],
       game: {
@@ -136,8 +137,8 @@ class SettingsModal extends React.Component {
         <Modal.Content>
           <Step.Group size={ 'mini' }>
             { steps.map((step) => (
-              <Step active={ step.active } onClick={ () => this.setActive(step) }>
-                <Icon name={ step.valid ? 'check' : step.icon }/>
+              <Step completed={ step.valid() } active={ step.active } onClick={ () => this.setActive(step) }>
+                <Icon name={ step.icon }/>
                 <Step.Content>
                   <Step.Title>{ step.title }</Step.Title>
                 </Step.Content>
@@ -148,7 +149,7 @@ class SettingsModal extends React.Component {
         </Modal.Content>
         <Modal.Actions>
           <Button color='green' onClick={ () => saveSettings(this.state.game) }
-                  disabled={ steps.some(({ valid }) => !valid) }>Save</Button>
+                  disabled={ steps.some(({ valid }) => !valid()) }>Save</Button>
         </Modal.Actions>
       </Modal>
     );
