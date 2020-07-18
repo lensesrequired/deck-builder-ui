@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Button, Step, Icon } from 'semantic-ui-react';
+import { Modal, Form, Button, Step, Icon, Table, Input, Dropdown } from 'semantic-ui-react';
 import CardPicker from './cardPicker';
 
 class SettingsModal extends React.Component {
@@ -33,7 +33,27 @@ class SettingsModal extends React.Component {
         numPlayers: '2',
         handSize: '5',
         startingDeck: [],
-        marketplace: []
+        marketplace: [],
+        turn: {
+          pre: {
+            'draw': { required: 0 },
+            'discard': { required: 0 },
+            'destroy': { required: 0 }
+          },
+          during: {
+            'play': { optional: 1, required: 0 },
+            'buy': { optional: 1, required: 0 },
+            'draw': { optional: 0, required: 0 },
+            'discard': { optional: 0, required: 0 },
+            'destroy': { optional: 0, required: 0 }
+          },
+          post: {
+            'draw': { required: 5 },
+            'discard': { required: -1 },
+            'destroy': { required: 0 }
+          }
+        },
+        end_trigger: {}
       }
     };
   }
@@ -54,6 +74,43 @@ class SettingsModal extends React.Component {
   onInput = (event, { name, value }) => {
     this.setState({ game: { ...this.state.game, [name]: value } });
   };
+
+  changeAction = (turn_phase, action_type, action_qty_type, str_value) => {
+    const int_value = parseInt(str_value, 10);
+    if (!isNaN(int_value) || str_value === '') {
+      const game = this.state.game;
+      game.turn[turn_phase][action_type][action_qty_type] = isNaN(int_value) ? '' : int_value;
+      this.setState({ game });
+    }
+  };
+
+  actionTable = (turn_phase) => (<Table definition>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell/>
+        <Table.HeaderCell>Required</Table.HeaderCell>
+        { turn_phase === 'during'
+          ? (<Table.HeaderCell>Optional</Table.HeaderCell>)
+          : null }
+      </Table.Row>
+    </Table.Header>
+    <Table.Body>
+      { Object.entries(this.state.game.turn[turn_phase]).reduce((acc, [action_type, qtys]) => {
+        acc.push(<Table.Row>
+          <Table.Cell>{ action_type }</Table.Cell>
+          <Table.Cell><Input value={ qtys.required } type={ 'number' }
+                             onChange={ (event, { value }) => this.changeAction(turn_phase, action_type,
+                               'required', value) }/></Table.Cell>
+          { turn_phase === 'during'
+            ? (<Table.Cell><Input value={ qtys.optional } type={ 'number' }
+                                  onChange={ (event, { value }) => this.changeAction(turn_phase, action_type,
+                                    'optional', value) }/></Table.Cell>)
+            : null }
+        </Table.Row>);
+        return acc;
+      }, []) }
+    </Table.Body>
+  </Table>);
 
   formParts = () => ({
     'Players': <div>
@@ -77,24 +134,25 @@ class SettingsModal extends React.Component {
       </Form.Field>
     </div>,
     'Game Play': <div>
-      <Form.Field><label>Turn Actions</label></Form.Field>
+      <Form.Field><label>Turn Actions (use -1 to signify all cards possible)</label></Form.Field>
       <Form.Field style={ { paddingLeft: '25px' } }>
         <Form.Field>
           <label>Pre</label>
-          None
+          { this.actionTable('pre') }
         </Form.Field>
         <Form.Field>
           <label>During</label>
-          1 Action, 1 Buy
+          { this.actionTable('during') }
         </Form.Field>
         <Form.Field>
           <label>Post</label>
-          Discard all, Draw starting hand size
+          { this.actionTable('post') }
         </Form.Field>
       </Form.Field>
       <Form.Field>
         <label>Conditions to end game</label>
-        1 Pile empty
+        <Dropdown placeholder={ 'Trigger Type' } fluid selection
+                  options={ [{ text: 'Turns', value: 'turns' }, { text: 'Empty Piles', value: 'piles' }] }/>
       </Form.Field>
       <Form.Group style={ { paddingLeft: '25px' } }>
       </Form.Group>
