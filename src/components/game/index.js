@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button, Table } from 'semantic-ui-react';
+import { Icon, InlineIcon } from '@iconify/react';
+import infinityIcon from '@iconify/icons-mdi/infinity';
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 import SettingsModal from './settingsModal';
 import 'react-semantic-toasts/styles/react-semantic-alert.css';
@@ -227,8 +229,10 @@ class Game extends React.Component {
                       if (action_type !== 'buying_power') {
                         acc.push(<Table.Row>
                           <Table.Cell>{ action_type }</Table.Cell>
-                          <Table.Cell>{ qtys.required || 0 }</Table.Cell>
-                          <Table.Cell>{ qtys.optional || 0 }</Table.Cell>
+                          <Table.Cell>{ ((qtys.required === '-1' || qtys.required === -1) &&
+                            <Icon icon={ infinityIcon }/>) || qtys.required || 0 }</Table.Cell>
+                          <Table.Cell>{ ((qtys.optional === '-1' || qtys.optional === -1) &&
+                            <Icon icon={ infinityIcon }/>) || qtys.optional || 0 }</Table.Cell>
                         </Table.Row>);
                       }
                       return acc;
