@@ -26,9 +26,11 @@ class SettingsModal extends React.Component {
           icon: 'trophy',
           title: 'Game Play',
           active: false,
-          valid: () => (true)
+          valid: () => (this.state.trigger_type && this.state.trigger_qty && this.state.trigger_qty !== '0')
         }
       ],
+      trigger_type: '',
+      trigger_qty: '',
       game: {
         numPlayers: '2',
         handSize: '5',
@@ -52,8 +54,7 @@ class SettingsModal extends React.Component {
             'discard': { required: -1 },
             'destroy': { required: 0 }
           }
-        },
-        end_trigger: {}
+        }
       }
     };
   }
@@ -150,9 +151,14 @@ class SettingsModal extends React.Component {
         </Form.Field>
       </Form.Field>
       <Form.Field>
-        <label>Conditions to end game</label>
-        <Dropdown placeholder={ 'Trigger Type' } fluid selection
-                  options={ [{ text: 'Turns', value: 'turns' }, { text: 'Empty Piles', value: 'piles' }] }/>
+        <label>Condition to end game</label>
+        <Input label={ <Dropdown placeholder={ 'Trigger Type' } selection
+                                 onChange={ (event, { value }) => this.setState({ trigger_type: value }) }
+                                 options={ [
+                                   { text: 'Turns', value: 'turns' },
+                                   { text: 'Empty Piles', value: 'piles' }] }/> } value={ this.state.trigger_qty || '' }
+               type={ 'number' }
+               onChange={ (event, { value }) => (this.setState({ trigger_qty: value })) }/>
       </Form.Field>
       <Form.Group style={ { paddingLeft: '25px' } }>
       </Form.Group>
@@ -187,7 +193,7 @@ class SettingsModal extends React.Component {
 
   render() {
     const { isOpen, saveSettings } = this.props;
-    const { steps } = this.state;
+    const { steps, trigger_type, trigger_qty } = this.state;
 
     return (
       <Modal as={ Form } open={ isOpen } centered={ false }>
@@ -206,7 +212,7 @@ class SettingsModal extends React.Component {
           { this.getFormPart() }
         </Modal.Content>
         <Modal.Actions>
-          <Button color='green' onClick={ () => saveSettings(this.state.game) }
+          <Button color='green' onClick={ () => saveSettings({ ...this.state.game, [trigger_type]: trigger_qty }) }
                   disabled={ steps.some(({ valid }) => !valid()) }>Save</Button>
         </Modal.Actions>
       </Modal>
