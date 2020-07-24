@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Button, Step, Icon, Table, Input, Dropdown } from 'semantic-ui-react';
+import { Modal, Form, Button, Step, Icon, Table, Input, Dropdown, Checkbox } from 'semantic-ui-react';
 import CardPicker from './cardPicker';
 
 class SettingsModal extends React.Component {
@@ -26,11 +26,10 @@ class SettingsModal extends React.Component {
           icon: 'trophy',
           title: 'Game Play',
           active: false,
-          valid: () => (this.state.trigger_type && this.state.trigger_qty && this.state.trigger_qty !== '0')
+          valid: () => (this.state.game.end_trigger.type && this.state.game.end_trigger.qty &&
+            this.state.game.end_trigger.qty !== '0')
         }
       ],
-      trigger_type: '',
-      trigger_qty: '',
       game: {
         numPlayers: '2',
         handSize: '5',
@@ -39,8 +38,7 @@ class SettingsModal extends React.Component {
         turn: {
           pre: {
             'draw': { required: 0 },
-            'discard': { required: 0 },
-            'destroy': { required: 0 }
+            'discard': { required: 0 }
           },
           during: {
             'play': { optional: 1, required: 0 },
@@ -51,9 +49,12 @@ class SettingsModal extends React.Component {
           },
           post: {
             'draw': { required: 5 },
-            'discard': { required: -1 },
-            'destroy': { required: 0 }
+            'discard': { required: -1 }
           }
+        },
+        end_trigger: {
+          type: '',
+          qty: ''
         }
       }
     };
@@ -113,24 +114,36 @@ class SettingsModal extends React.Component {
     </Table.Body>
   </Table>);
 
-  formParts = () => ({
+  autoActions = (turn_phase) => (
+    <>
+      <Checkbox toggle label={ 'Discard all cards' }
+                checked={ this.state.game.turn[turn_phase].discard.required === -1 }
+                onClick={ () => this.changeAction(turn_phase, 'discard', 'required',
+                  this.state.game.turn[turn_phase].discard.required === -1 ? 0 : -1) }/>
+      <Input label={ 'Required Draws' } type={ 'number' } style={ { marginTop: '5px' } }
+             value={ this.state.game.turn[turn_phase].draw.required }
+             onChange={ (_, { value }) => this.changeAction(turn_phase, 'draw', 'required', value) }/>
+    </>
+  );
+
+  formParts = ({ deck, game }) => ({
     'Players': <div>
-      <Form.Input label='Number of Players' name='numPlayers' value={ this.state.game.numPlayers }
+      <Form.Input label='Number of Players' name='numPlayers' value={ game.numPlayers }
                   onChange={ this.onInput }/>
-      <Form.Input label='Default Hand Size' name='handSize' value={ this.state.game.handSize }
+      <Form.Input label='Default Hand Size' name='handSize' value={ game.handSize }
                   onChange={ this.onInput }/>
       <Form.Field>
         <label>Starting Deck</label>
-        <CardPicker cards={ this.state.deck.cards || [] } deckName={ 'startingDeck' } images={ this.props.images }
+        <CardPicker cards={ deck.cards || [] } deckName={ 'startingDeck' } images={ this.props.images }
                     onSave={ this.setDeck }/>
-        Number of Cards: { this.state.game.startingDeck.reduce((acc, card) => (acc + parseInt(card.qty, 10)), 0) }
+        Number of Cards: { game.startingDeck.reduce((acc, card) => (acc + parseInt(card.qty, 10)), 0) }
       </Form.Field>
     </div>,
     'Marketplace': <div>
       <Form.Field><label>Marketplace</label>
-        <div><CardPicker cards={ this.state.deck.cards || [] } deckName={ 'marketplace' } images={ this.props.images }
+        <div><CardPicker cards={ deck.cards || [] } deckName={ 'marketplace' } images={ this.props.images }
                          onSave={ this.setDeck }/>
-          Number of Cards: { this.state.game.marketplace.reduce((acc, card) => (acc + parseInt(card.qty, 10)), 0) }
+          Number of Cards: { game.marketplace.reduce((acc, card) => (acc + parseInt(card.qty, 10)), 0) }
         </div>
       </Form.Field>
     </div>,
@@ -139,7 +152,7 @@ class SettingsModal extends React.Component {
       <Form.Field style={ { paddingLeft: '25px' } }>
         <Form.Field>
           <label>Pre</label>
-          { this.actionTable('pre') }
+          { this.autoActions('pre') }
         </Form.Field>
         <Form.Field>
           <label>During</label>
@@ -147,18 +160,22 @@ class SettingsModal extends React.Component {
         </Form.Field>
         <Form.Field>
           <label>Post</label>
-          { this.actionTable('post') }
+          { this.autoActions('post') }
         </Form.Field>
       </Form.Field>
       <Form.Field>
         <label>Condition to end game</label>
-        <Input label={ <Dropdown placeholder={ 'Trigger Type' } selection
-                                 onChange={ (event, { value }) => this.setState({ trigger_type: value }) }
-                                 options={ [
-                                   { text: 'Turns', value: 'turns' },
-                                   { text: 'Empty Piles', value: 'piles' }] }/> } value={ this.state.trigger_qty || '' }
-               type={ 'number' }
-               onChange={ (event, { value }) => (this.setState({ trigger_qty: value })) }/>
+        <Input
+          label={ <Dropdown
+            placeholder={ 'Trigger Type' } selection
+            onChange={ (event, { value }) => this.setState({
+              game: { ...game, end_trigger: { ...game.end_trigger, type: value } }
+            }) }
+            options={ [{ text: 'Turns', value: 'turns' }, { text: 'Empty Piles', value: 'piles' }] }/> }
+          value={ game.end_trigger.qty || '' } type={ 'number' }
+          onChange={ (event, { value }) => (this.setState({
+            game: { ...game, end_trigger: { ...game.end_trigger, qty: value } }
+          })) }/>
       </Form.Field>
       <Form.Group style={ { paddingLeft: '25px' } }>
       </Form.Group>
@@ -178,7 +195,7 @@ class SettingsModal extends React.Component {
     const { steps } = this.state;
     const activeStep = steps.find((s) => s.active);
 
-    return this.formParts()[activeStep.title];
+    return this.formParts(this.state)[activeStep.title];
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -193,7 +210,7 @@ class SettingsModal extends React.Component {
 
   render() {
     const { isOpen, saveSettings } = this.props;
-    const { steps, trigger_type, trigger_qty } = this.state;
+    const { steps } = this.state;
 
     return (
       <Modal as={ Form } open={ isOpen } centered={ false }>
@@ -212,7 +229,7 @@ class SettingsModal extends React.Component {
           { this.getFormPart() }
         </Modal.Content>
         <Modal.Actions>
-          <Button color='green' onClick={ () => saveSettings({ ...this.state.game, [trigger_type]: trigger_qty }) }
+          <Button color='green' onClick={ () => saveSettings(this.state.game) }
                   disabled={ steps.some(({ valid }) => !valid()) }>Save</Button>
         </Modal.Actions>
       </Modal>
