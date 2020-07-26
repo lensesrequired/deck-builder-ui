@@ -142,7 +142,7 @@ class Creator extends React.Component {
   updateQty = (index, value) => {
     const { cards } = this.state;
     const card = cards[index];
-    card.qty = value;
+    card.qty = value ? value : '0';
     cards.splice(index, 1, card);
     this.updateCards(cards, false);
   };
@@ -227,7 +227,8 @@ class Creator extends React.Component {
                   <img alt={ 'card' } style={ { height: '400px', marginBottom: '10px' } }
                        src={ `data:image/png;base64,${ cardImages[card.id].data }` }/> : 'Loading...' }
                 <Input label={ 'Qty' } style={ { marginBottom: '3px' } } type={ 'number' }
-                       value={ card.qty || '0' } onChange={ (_, { value }) => this.updateQty(index, value) }/>
+                       value={ card.qty === '0' ? '' : card.qty }
+                       onChange={ (_, { value }) => this.updateQty(index, value) }/>
                 <div className={ 'row' }>
                   <Button onClick={ () => this.openCardModal(index) }>Edit</Button>
                   <Button onClick={ () => this.removeCard(index) }>Remove</Button>
