@@ -7,6 +7,8 @@ class SettingsModal extends React.Component {
     super(props);
 
     this.state = {
+      isMarketplacePickerOpen: false,
+      isStartingDeckPickerOpen: false,
       deck: {},
       steps: [
         {
@@ -60,7 +62,7 @@ class SettingsModal extends React.Component {
     };
   }
 
-  setDeck = (startingDeck, selectedCards, deckName) => {
+  setDeck = (startingDeck, selectedCards, deckName, openFlag) => {
     const newDeck = startingDeck.reduce((acc, card) => {
       if (selectedCards[card.id] && selectedCards[card.id] !== '0') {
         const newCard = JSON.parse(JSON.stringify(card));
@@ -70,7 +72,7 @@ class SettingsModal extends React.Component {
       return acc;
     }, []);
 
-    this.setState({ game: { ...this.state.game, [deckName]: newDeck } });
+    this.setState({ [openFlag]: false, game: { ...this.state.game, [deckName]: newDeck } });
   };
 
   onInput = (event, { name, value }) => {
@@ -128,21 +130,31 @@ class SettingsModal extends React.Component {
 
   formParts = ({ deck, game }) => ({
     'Players': <div>
-      <Form.Input label='Number of Players' name='numPlayers' value={ game.numPlayers }
-                  onChange={ this.onInput }/>
-      <Form.Input label='Default Hand Size' name='handSize' value={ game.handSize }
-                  onChange={ this.onInput }/>
+      <Form.Input label='Number of Players' name='numPlayers' value={ game.numPlayers } onChange={ this.onInput }/>
+      <Form.Input label='Default Hand Size' name='handSize' value={ game.handSize } onChange={ this.onInput }/>
       <Form.Field>
         <label>Starting Deck</label>
         <CardPicker cards={ deck.cards || [] } deckName={ 'startingDeck' } images={ this.props.images }
-                    onSave={ this.setDeck }/>
+                    onSave={ (startingDeck, selectedCards, deckName) =>
+                      this.setDeck(startingDeck, selectedCards, deckName, 'isStartingDeckPickerOpen') }
+                    isOpen={ this.state.isStartingDeckPickerOpen }
+                    trigger={
+                      <Button onClick={ () => this.setState({ isStartingDeckPickerOpen: true }) }>Select Cards</Button>
+                    }/>
         Number of Cards: { game.startingDeck.reduce((acc, card) => (acc + parseInt(card.qty, 10)), 0) }
       </Form.Field>
     </div>,
     'Marketplace': <div>
-      <Form.Field><label>Marketplace</label>
-        <div><CardPicker cards={ deck.cards || [] } deckName={ 'marketplace' } images={ this.props.images }
-                         onSave={ this.setDeck }/>
+      <Form.Field>
+        <label>Marketplace</label>
+        <div>
+          <CardPicker cards={ deck.cards || [] } deckName={ 'marketplace' } images={ this.props.images }
+                      onSave={ (startingDeck, selectedCards, deckName) =>
+                        this.setDeck(startingDeck, selectedCards, deckName, 'isMarketplacePickerOpen') }
+                      isOpen={ this.state.isMarketplacePickerOpen }
+                      trigger={
+                        <Button onClick={ () => this.setState({ isMarketplacePickerOpen: true }) }>Select Cards</Button>
+                      }/>
           Number of Cards: { game.marketplace.reduce((acc, card) => (acc + parseInt(card.qty, 10)), 0) }
         </div>
       </Form.Field>

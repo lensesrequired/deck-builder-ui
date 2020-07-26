@@ -10,11 +10,6 @@ class CardPicker extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.isOpen && !prevProps.isOpen) {
-    }
-  }
-
   selectCard = (cardId, qty) => {
     const { selectedCards } = this.state;
     selectedCards[cardId] = qty;
@@ -25,7 +20,7 @@ class CardPicker extends React.Component {
     const { selectedCards } = this.state;
     const { onSave, cards = [], images = {}, deckName } = this.props;
     return (
-      <Modal as={ Form } trigger={ <Button>Select Cards</Button> } centered={ false }>
+      <Modal as={ Form } trigger={ this.props.trigger } centered={ false } open={ this.props.isOpen }>
         <Modal.Header>{ 'Select Cards' }</Modal.Header>
         <Modal.Content>
           <div style={ {

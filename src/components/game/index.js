@@ -83,7 +83,7 @@ class Game extends React.Component {
   };
 
   saveSettings = (settings) => {
-    fetch('https://deck-builder-api.herokuapp.com/games/' + this.props.id, {
+    fetch('https://deck-builder-api.herokuapp.com/games/' + this.props.id + '/settings', {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(settings)
     }).then(async (response) => {
@@ -160,19 +160,21 @@ class Game extends React.Component {
       return (<main>
         <SemanticToastContainer/>
         <h2>Winner: { game.game_ended.winner[0] } with { game.game_ended.winner[1] } points!</h2>
-        <table>
-          <thead>
-          <tr>
-            <td style={ { border: '1px solid black' } }><strong>Player</strong></td>
-            <td style={ { border: '1px solid black' } }><strong>Points</strong></td>
-          </tr>
-          </thead>
-          { Object.entries(game.game_ended.player_points)
-            .map(([player, points]) => (<tr>
-              <td style={ { border: '1px solid black' } }>{ player }</td>
-              <td style={ { border: '1px solid black' } }>{ points }</td>
-            </tr>)) }
-        </table>
+        <Table celled style={ { margin: 'auto', width: '750px' } }>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Player</Table.HeaderCell>
+              <Table.HeaderCell>Points</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+
+          <Table.Body>
+            { Object.entries(game.game_ended.player_points).map(([player, points]) => (<Table.Row>
+              <Table.Cell>{ player }</Table.Cell>
+              <Table.Cell>{ points }</Table.Cell>
+            </Table.Row>)) }
+          </Table.Body>
+        </Table>
       </main>);
     }
     return (
