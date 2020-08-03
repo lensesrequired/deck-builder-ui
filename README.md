@@ -1,29 +1,37 @@
-![React Logo](https://github.com/vercel/vercel/blob/master/packages/frameworks/logos/react.svg)
+# Deck Builder UI
 
-# React Example
+This repo contains a React project, deployed using Vercel, that interacts with a Flask API to facilitate 1) custom card designing and 2) deck building card game playing. The API is in a separate repo here:  https://github.com/lensesrequired/deck-builder-api.
 
-This directory is a brief example of a [React](https://reactjs.org/) app with [Serverless Functions](https://vercel.com/docs/v2/serverless-functions/introduction) that can be deployed with Vercel and zero configuration.
+#### Here are some screenshots:
 
-## Deploy Your Own
+Deck Builder and Card Editor
 
-Deploy your own React project, along with Serverless Functions, with Vercel.
+<img alt="DeckBuilder" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/DeckBuilder.png" width="450"/><img alt="CardEditor" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/CardEditor.png" width="450"/>
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/vercel/tree/master/examples/create-react-app-functions)
+Settings
 
-_Live Example: https://create-react-app.now-examples.now.sh/_
+<img alt="GameSettings" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/GameSettings.png" width="450"/><img alt="TurnSettings" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/TurnSettings.png" width="450"/>
 
-### How We Created This Example
+Gameplay
 
-To get started with React, along with [Serverless Functions](https://vercel.com/docs/v2/serverless-functions/introduction), with Vercel, you can use the [Create-React-App CLI](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) to initialize the project:
+<img alt="Gameplay" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/Gameplay.png" width="450"/>
 
-```shell
-$ npx create-react-app my-app
-```
+### File structure:
+- src: holds all of the intereacting stuff
+  - index.js: contains the router and root of the app, this is what gets run
+  - index.css: contains the styles for the app
+  - components: contains the various components/pages of the app. It's separated into the two different parts, card creation/deck building and game play.
 
-### Deploying From Your Terminal
+# Local Development
+The following is what you will need for local development. Alternatively, you can use this app from https://deck-builder-api.herokuapp.com/
 
-You can deploy your new React project, along with [Serverless Functions](https://vercel.com/docs/v2/serverless-functions/introduction), with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
+## Requirements
+- NPM
 
-```shell
-$ vercel
-```
+## Installation 
+1) Clone this repository to a local directory on your computer
+2) Use npm to install the required packages:  `npm install`
+
+## Usage
+To start the app, navigate to the root of the repository folder and run `npm run dev`. This will run a script described in the package.json.
+Go to a web browser and go to `localhost:3000`, this will present you with the creation web page and you can explore from there.
