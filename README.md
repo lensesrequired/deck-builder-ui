@@ -23,7 +23,7 @@ Gameplay
   - components: contains the various components/pages of the app. It's separated into the two different parts, card creation/deck building and game play.
 
 # Local Development
-The following is what you will need for local development. Alternatively, you can use this app from https://deck-builder-api.herokuapp.com/
+The following is what you will need for local development. Alternatively, you can use this app from https://deckbuilder.lensesrequired.com/
 
 ## Requirements
 - NPM
