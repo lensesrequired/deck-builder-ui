@@ -6,15 +6,15 @@ This repo contains a React project, deployed using Vercel, that interacts with a
 
 Deck Builder and Card Editor
 
-<img alt="DeckBuilder" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/DeckBuilder.png" width="450"/><img alt="CardEditor" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/CardEditor.png" width="450"/>
+<img alt="DeckBuilder" src="./doc_images/DeckBuilder.png" width="450"/><img alt="CardEditor" src="./doc_images/CardEditor.png" width="450"/>
 
 Settings
 
-<img alt="GameSettings" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/GameSettings.png" width="450"/><img alt="TurnSettings" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/TurnSettings.png" width="450"/>
+<img alt="GameSettings" src="./doc_images/GameSettings.png" width="450"/><img alt="TurnSettings" src="./doc_images/TurnSettings.png" width="450"/>
 
 Gameplay
 
-<img alt="Gameplay" src="https://github.com/lensesrequired/deck-builder-api/tree/master/docs/images/Gameplay.png" width="450"/>
+<img alt="Gameplay" src="./doc_images/Gameplay.png" width="450"/>
 
 ### File structure:
 - src: holds all of the intereacting stuff
